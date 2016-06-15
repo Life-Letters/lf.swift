@@ -35,6 +35,14 @@ public class HTTPStream: NSObject {
     private let lockQueue:dispatch_queue_t = dispatch_queue_create(
         "com.github.shogo4405.lf.HTTPStream.lock", DISPATCH_QUEUE_SERIAL
     )
+    
+    public func attachStillImageOutput(stillImageOutput: AVCaptureStillImageOutput){
+        dispatch_async(lockQueue) {
+            if self.mixer.session.canAddOutput(stillImageOutput){
+                self.mixer.session.addOutput(stillImageOutput)
+            }
+        }
+    }
 
     public func attachCamera(camera:AVCaptureDevice?) {
         dispatch_async(lockQueue) {
