@@ -36,6 +36,10 @@ public class HTTPStream: NSObject {
         "com.github.shogo4405.lf.HTTPStream.lock", DISPATCH_QUEUE_SERIAL
     )
     
+    public func getMixer() -> AVMixer{
+        return mixer
+    }
+    
     public func attachStillImageOutput(stillImageOutput: AVCaptureStillImageOutput){
         dispatch_async(lockQueue) {
             if self.mixer.session.canAddOutput(stillImageOutput){
