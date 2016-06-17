@@ -40,6 +40,14 @@ public class HTTPStream: NSObject {
         return mixer
     }
     
+    public func attachCaptureMovieFileOutput(movieOutput: AVCaptureMovieFileOutput){
+        dispatch_async(lockQueue) {
+            if self.mixer.session.canAddOutput(movieOutput){
+                self.mixer.session.addOutput(movieOutput)
+            }
+        }
+    }
+    
     public func attachStillImageOutput(stillImageOutput: AVCaptureStillImageOutput){
         dispatch_async(lockQueue) {
             if self.mixer.session.canAddOutput(stillImageOutput){
