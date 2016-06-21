@@ -40,6 +40,14 @@ public class HTTPStream: NSObject {
         return mixer
     }
     
+    public func torchOn(level: Float, completionHandler: (()->Void)?){
+        mixer.videoIO.torchOn(level, completionHandler: completionHandler)
+    }
+    
+    public func torchOff(completionHandler: (()->Void)?){
+        mixer.videoIO.torchOff(completionHandler)
+    }
+    
     public func attachCaptureMovieFileOutput(movieOutput: AVCaptureMovieFileOutput){
         dispatch_async(lockQueue) {
             if self.mixer.session.canAddOutput(movieOutput){

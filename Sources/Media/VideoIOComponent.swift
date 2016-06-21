@@ -346,10 +346,10 @@ final class VideoIOComponent: NSObject {
     }
     
     
-    public func torchOn(level: Float){
+    func torchOn(level: Float, completionHandler: (()->Void)?){
         
         if input == nil {
-            logger.error("No input for torch, \(error)")
+            logger.error("No input for torch")
             return
         }
         
@@ -360,15 +360,16 @@ final class VideoIOComponent: NSObject {
             camera.torchMode = .On
             _ = try? camera.setTorchModeOnWithLevel(level)
             camera.unlockForConfiguration()
+            completionHandler?()
         }else{
-            logger.error("No torch on device, \(error)")
+            logger.error("No torch on device")
         }
         
     }
     
-    public func torchOff(){
+    func torchOff(completionHandler: (()->Void)?){
         if input == nil {
-            logger.error("No input for torch, \(error)")
+            logger.error("No input for torch")
             return
         }
         
@@ -378,8 +379,9 @@ final class VideoIOComponent: NSObject {
             _ = try? camera.lockForConfiguration()
             camera.torchMode = .Off
             camera.unlockForConfiguration()
+            completionHandler?()
         }else{
-            logger.error("No torch on device, \(error)")
+            logger.error("No torch on device")
         }
     }
 
