@@ -296,7 +296,7 @@ final class VideoIOComponent: NSObject {
         decoder.delegate = self
     }
 
-    func attachCamera(camera:AVCaptureDevice?) {
+    func attachCamera(camera:AVCaptureDevice?, torch: Bool) {
         output = nil
         guard let camera:AVCaptureDevice = camera else {
             input = nil
@@ -331,10 +331,12 @@ final class VideoIOComponent: NSObject {
         
         // We dont want to touch the torch
 
+        self.torch = torch
+        
         #if os(iOS)
         do {
             try camera.lockForConfiguration()
-            let torchMode:AVCaptureTorchMode = torch ? .On : .Off
+            let torchMode:AVCaptureTorchMode = self.torch ? .On : .Off
             if (camera.isTorchModeSupported(torchMode)) {
                 camera.torchMode = torchMode
             }
@@ -345,46 +347,6 @@ final class VideoIOComponent: NSObject {
         #endif
     }
     
-    
-    func torchOn(level: Float, completionHandler: (()->Void)?){
-        
-        if input == nil {
-            logger.error("No input for torch")
-            return
-        }
-        
-        let camera = input!.device
-        
-        if camera.hasTorch {
-            _ = try? camera.lockForConfiguration()
-            camera.torchMode = .On
-            _ = try? camera.setTorchModeOnWithLevel(level)
-            camera.unlockForConfiguration()
-            completionHandler?()
-        }else{
-            logger.error("No torch on device")
-        }
-        
-    }
-    
-    func torchOff(completionHandler: (()->Void)?){
-        if input == nil {
-            logger.error("No input for torch")
-            return
-        }
-        
-        let camera = input!.device
-        
-        if camera.hasTorch {
-            _ = try? camera.lockForConfiguration()
-            camera.torchMode = .Off
-            camera.unlockForConfiguration()
-            completionHandler?()
-        }else{
-            logger.error("No torch on device")
-        }
-    }
-
     func attachScreen(screen:ScreenCaptureSession?) {
         guard let screen:ScreenCaptureSession = screen else {
             return

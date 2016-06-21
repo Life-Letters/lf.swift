@@ -107,7 +107,7 @@ final class LiveViewController: UIViewController {
         rtmpStream = RTMPStream(rtmpConnection: rtmpConnection)
         rtmpStream.syncOrientation = true
         rtmpStream.attachAudio(AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeAudio))
-        rtmpStream.attachCamera(AVMixer.deviceWithPosition(.Back))
+        rtmpStream.attachCamera(AVMixer.deviceWithPosition(.Back), torch: false)
         rtmpStream.addObserver(self, forKeyPath: "currentFPS", options: NSKeyValueObservingOptions.New, context: nil)
 //        rtmpStream.attachScreen(ScreenCaptureSession())
 
@@ -166,7 +166,7 @@ final class LiveViewController: UIViewController {
 
     func rotateCamera(sender:UIBarButtonItem) {
         let position:AVCaptureDevicePosition = currentPosition == .Back ? .Front : .Back
-        httpStream.attachCamera(AVMixer.deviceWithPosition(position))
+        httpStream.attachCamera(AVMixer.deviceWithPosition(position), torch: false)
         currentPosition = position
     }
 

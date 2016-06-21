@@ -299,9 +299,9 @@ public class RTMPStream: EventDispatcher {
         }
     }
 
-    public func attachCamera(camera:AVCaptureDevice?) {
+    public func attachCamera(camera:AVCaptureDevice?, torch: Bool) {
         dispatch_async(lockQueue) {
-            self.mixer.videoIO.attachCamera(camera)
+            self.mixer.videoIO.attachCamera(camera, torch: torch)
             self.mixer.startRunning()
         }
     }

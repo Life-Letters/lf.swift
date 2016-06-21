@@ -40,12 +40,14 @@ public class HTTPStream: NSObject {
         return mixer
     }
     
-    public func torchOn(level: Float, completionHandler: (()->Void)?){
-        mixer.videoIO.torchOn(level, completionHandler: completionHandler)
+    public func torchOn(completionHandler: (()->Void)?){
+        mixer.videoIO.torch = true
+        completionHandler?()
     }
     
     public func torchOff(completionHandler: (()->Void)?){
-        mixer.videoIO.torchOff(completionHandler)
+        mixer.videoIO.torch = false
+        completionHandler?()
     }
     
     public func attachCaptureMovieFileOutput(movieOutput: AVCaptureMovieFileOutput){
@@ -64,9 +66,9 @@ public class HTTPStream: NSObject {
         }
     }
 
-    public func attachCamera(camera:AVCaptureDevice?) {
+    public func attachCamera(camera:AVCaptureDevice?, torch: Bool) {
         dispatch_async(lockQueue) {
-            self.mixer.videoIO.attachCamera(camera)
+            self.mixer.videoIO.attachCamera(camera, torch: torch)
             self.mixer.startRunning()
         }
     }
