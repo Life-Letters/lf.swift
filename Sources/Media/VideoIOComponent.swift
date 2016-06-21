@@ -331,18 +331,56 @@ final class VideoIOComponent: NSObject {
         
         // We dont want to touch the torch
 
-//        #if os(iOS)
-//        do {
-//            try camera.lockForConfiguration()
-//            let torchMode:AVCaptureTorchMode = torch ? .On : .Off
-//            if (camera.isTorchModeSupported(torchMode)) {
-//                camera.torchMode = torchMode
-//            }
-//            camera.unlockForConfiguration()
-//        } catch let error as NSError {
-//            logger.error("\(error)")
-//        }
-//        #endif
+        #if os(iOS)
+        do {
+            try camera.lockForConfiguration()
+            let torchMode:AVCaptureTorchMode = torch ? .On : .Off
+            if (camera.isTorchModeSupported(torchMode)) {
+                camera.torchMode = torchMode
+            }
+            camera.unlockForConfiguration()
+        } catch let error as NSError {
+            logger.error("\(error)")
+        }
+        #endif
+    }
+    
+    
+    public func torchOn(level: Float){
+        
+        if input == nil {
+            logger.error("No input for torch, \(error)")
+            return
+        }
+        
+        let camera = input!.device
+        
+        if camera.hasTorch {
+            _ = try? camera.lockForConfiguration()
+            camera.torchMode = .On
+            _ = try? camera.setTorchModeOnWithLevel(level)
+            camera.unlockForConfiguration()
+        }else{
+            logger.error("No torch on device, \(error)")
+        }
+        
+    }
+    
+    public func torchOff(){
+        if input == nil {
+            logger.error("No input for torch, \(error)")
+            return
+        }
+        
+        let camera = input!.device
+        
+        if camera.hasTorch {
+            _ = try? camera.lockForConfiguration()
+            camera.torchMode = .Off
+            camera.unlockForConfiguration()
+        }else{
+            logger.error("No torch on device, \(error)")
+        }
     }
 
     func attachScreen(screen:ScreenCaptureSession?) {
