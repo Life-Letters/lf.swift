@@ -5,8 +5,8 @@ import AVFoundation
 struct Preference {
     static let defaultInstance:Preference = Preference()
 
-    var uri:String? = "rtmp://test:test@192.168.179.3/live"
-    var streamName:String? = "live"
+    var uri:String? = "rtmp://test:test@192.168.10.97:1935/live"
+    var streamName:String? = "myStream"
 }
 
 final class LiveViewController: UIViewController {
@@ -89,17 +89,15 @@ final class LiveViewController: UIViewController {
         sharedObject = RTMPSharedObject.getRemote("test", remotePath: Preference.defaultInstance.uri!, persistence: false)
         */
 
-        /*
-        httpStream = HTTPStream()
-        //httpStream.attachScreen(ScreenCaptureSession())
-        httpStream.syncOrientation = true
-        httpStream.attachCamera(AVMixer.deviceWithPosition(.Back))
-        httpStream.publish("hello")
-
-        httpService = HTTPService(domain: "", type: "_http._tcp", name: "lf", port: 8080)
-        httpService.startRunning()
-        httpService.addHTTPStream(httpStream)
-        */
+//        httpStream = HTTPStream()
+//        //httpStream.attachScreen(ScreenCaptureSession())
+//        httpStream.syncOrientation = true
+//        httpStream.attachCamera(AVMixer.deviceWithPosition(.Back))
+//        httpStream.publish("devicesApp")
+//
+//        httpService = HTTPService(domain: "", type: "_http._tcp", name: "lf", port: 8080)
+//        httpService.startRunning()
+//        httpService.addHTTPStream(httpStream)
 
         navigationItem.rightBarButtonItems = [
             UIBarButtonItem(title: "Torch", style: .Plain, target: self, action: #selector(LiveViewController.toggleTorch(_:))),
@@ -111,7 +109,7 @@ final class LiveViewController: UIViewController {
         rtmpStream.attachAudio(AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeAudio))
         rtmpStream.attachCamera(AVMixer.deviceWithPosition(.Back))
         rtmpStream.addObserver(self, forKeyPath: "currentFPS", options: NSKeyValueObservingOptions.New, context: nil)
-        //rtmpStream.attachScreen(ScreenCaptureSession())
+//        rtmpStream.attachScreen(ScreenCaptureSession())
 
         rtmpStream.captureSettings = [
             "sessionPreset": AVCaptureSessionPreset1280x720,
@@ -123,10 +121,10 @@ final class LiveViewController: UIViewController {
             "width": 1280,
             "height": 720,
         ]
+        
+        
 
         publishButton.addTarget(self, action: #selector(LiveViewController.onClickPublish(_:)), forControlEvents: .TouchUpInside)
-
-        view.addSubview(rtmpStream.view)
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(LiveViewController.tapScreen(_:)))
         touchView.addGestureRecognizer(tapGesture)
@@ -136,7 +134,7 @@ final class LiveViewController: UIViewController {
         videoBitrateSlider.value = Float(RTMPStream.defaultVideoBitrate) / 1024
         audioBitrateSlider.value = Float(RTMPStream.defaultAudioBitrate) / 1024
 
-        // view.addSubview(httpStream.view)
+         view.addSubview(rtmpStream.view)
 
         view.addSubview(touchView)
         view.addSubview(videoBitrateLabel)
@@ -168,7 +166,7 @@ final class LiveViewController: UIViewController {
 
     func rotateCamera(sender:UIBarButtonItem) {
         let position:AVCaptureDevicePosition = currentPosition == .Back ? .Front : .Back
-        rtmpStream.attachCamera(AVMixer.deviceWithPosition(position))
+        httpStream.attachCamera(AVMixer.deviceWithPosition(position))
         currentPosition = position
     }
 

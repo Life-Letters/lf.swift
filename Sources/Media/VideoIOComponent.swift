@@ -328,19 +328,21 @@ final class VideoIOComponent: NSObject {
         }
 
         fps = fps * 1
+        
+        // We dont want to touch the torch
 
-        #if os(iOS)
-        do {
-            try camera.lockForConfiguration()
-            let torchMode:AVCaptureTorchMode = torch ? .On : .Off
-            if (camera.isTorchModeSupported(torchMode)) {
-                camera.torchMode = torchMode
-            }
-            camera.unlockForConfiguration()
-        } catch let error as NSError {
-            logger.error("\(error)")
-        }
-        #endif
+//        #if os(iOS)
+//        do {
+//            try camera.lockForConfiguration()
+//            let torchMode:AVCaptureTorchMode = torch ? .On : .Off
+//            if (camera.isTorchModeSupported(torchMode)) {
+//                camera.torchMode = torchMode
+//            }
+//            camera.unlockForConfiguration()
+//        } catch let error as NSError {
+//            logger.error("\(error)")
+//        }
+//        #endif
     }
 
     func attachScreen(screen:ScreenCaptureSession?) {
