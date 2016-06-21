@@ -67,10 +67,12 @@ public class HTTPStream: NSObject {
     }
 
     public func attachCamera(camera:AVCaptureDevice?, torch: Bool) {
-        dispatch_async(lockQueue) {
-            self.mixer.videoIO.attachCamera(camera, torch: torch)
+        //  Some weird stuff u have to set the torch after sessions started
+        dispatch_async(dispatch_get_main_queue()) {
+            self.mixer.videoIO.attachCamera(camera)
             self.mixer.startRunning()
         }
+        self.mixer.videoIO.torch = torch
     }
 
     public func attachAudio(audio:AVCaptureDevice?, _ automaticallyConfiguresApplicationAudioSession:Bool = true) {

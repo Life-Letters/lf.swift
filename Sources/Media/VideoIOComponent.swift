@@ -296,7 +296,7 @@ final class VideoIOComponent: NSObject {
         decoder.delegate = self
     }
 
-    func attachCamera(camera:AVCaptureDevice?, torch: Bool) {
+    func attachCamera(camera:AVCaptureDevice?) {
         output = nil
         guard let camera:AVCaptureDevice = camera else {
             input = nil
@@ -328,10 +328,6 @@ final class VideoIOComponent: NSObject {
         }
 
         fps = fps * 1
-        
-        // We dont want to touch the torch
-
-        self.torch = torch
         
         #if os(iOS)
         do {

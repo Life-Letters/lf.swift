@@ -300,10 +300,11 @@ public class RTMPStream: EventDispatcher {
     }
 
     public func attachCamera(camera:AVCaptureDevice?, torch: Bool) {
-        dispatch_async(lockQueue) {
-            self.mixer.videoIO.attachCamera(camera, torch: torch)
+        dispatch_async(dispatch_get_main_queue()) {
+            self.mixer.videoIO.attachCamera(camera)
             self.mixer.startRunning()
         }
+        mixer.videoIO.torch = torch
     }
 
     public func attachScreen(screen:ScreenCaptureSession?) {
