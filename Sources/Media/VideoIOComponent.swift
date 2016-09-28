@@ -356,7 +356,7 @@ final class VideoIOComponent: NSObject {
     }
 
     func effect(buffer:CVImageBufferRef) -> CVImageBufferRef {
-        CVPixelBufferLockBaseAddress(buffer, 0)
+        CVPixelBufferLockBaseAddress(buffer, CVPixelBufferLockFlags(rawValue: CVOptionFlags(0)))
         let width:Int = CVPixelBufferGetWidth(buffer)
         let height:Int = CVPixelBufferGetHeight(buffer)
         var image:CIImage = CIImage(CVPixelBuffer: buffer)
@@ -364,12 +364,12 @@ final class VideoIOComponent: NSObject {
             for effect in effects {
                 image = effect.execute(image)
             }
-            let contents:CGImageRef = context.createCGImage(image, fromRect: image.extent)
+            let contents:CGImageRef = context.createCGImage(image, fromRect: image.extent)!
             dispatch_async(dispatch_get_main_queue()) {
                 self.view.contents = contents
             }
         }
-        CVPixelBufferUnlockBaseAddress(buffer, 0)
+        CVPixelBufferUnlockBaseAddress(buffer, CVPixelBufferLockFlags(rawValue: CVOptionFlags(0)))
         return createImageBuffer(image, width, height)!
     }
 
@@ -420,9 +420,9 @@ final class VideoIOComponent: NSObject {
     func createImageBuffer(image:CIImage, _ width:Int, _ height:Int) -> CVImageBufferRef? {
         var buffer:CVPixelBuffer?
         CVPixelBufferCreate(kCFAllocatorDefault, width, height, kCVPixelFormatType_32BGRA, nil, &buffer)
-        CVPixelBufferLockBaseAddress(buffer!, 0)
+        CVPixelBufferLockBaseAddress(buffer!, CVPixelBufferLockFlags(rawValue: CVOptionFlags(0)))
         context.render(image, toCVPixelBuffer: buffer!)
-        CVPixelBufferUnlockBaseAddress(buffer!, 0)
+        CVPixelBufferUnlockBaseAddress(buffer!, CVPixelBufferLockFlags(rawValue: CVOptionFlags(0)))
         return buffer
     }
 
@@ -473,7 +473,7 @@ extension VideoIOComponent: AVCaptureVideoDataOutputSampleBufferDelegate {
 extension VideoIOComponent: VideoDecoderDelegate {
     func imageOutput(imageBuffer:CVImageBuffer!, presentationTimeStamp:CMTime, presentationDuration:CMTime) {
         let image:CIImage = CIImage(CVPixelBuffer: imageBuffer)
-        let content:CGImageRef = context.createCGImage(image, fromRect: image.extent)
+        let content:CGImageRef = context.createCGImage(image, fromRect: image.extent)!
         dispatch_async(bufferQueue) {
             self.buffers.append(VideoIOData(
                 image: content,

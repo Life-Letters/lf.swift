@@ -12,20 +12,20 @@ extension NSURL {
         if (target != "") {
             target += "@"
         }
-        return absoluteString.stringByReplacingOccurrencesOfString(target, withString: "")
+        return absoluteString!.stringByReplacingOccurrencesOfString(target, withString: "")
     }
 
     var absoluteWithoutQueryString:String {
         guard let query:String = self.query else {
-            return self.absoluteString
+            return self.absoluteString!
         }
-        return absoluteString.stringByReplacingOccurrencesOfString("?" + query, withString: "")
+        return absoluteString!.stringByReplacingOccurrencesOfString("?" + query, withString: "")
     }
 
     func dictionaryFromQuery() -> [String: AnyObject] {
         var result:[String: AnyObject] = [:]
         guard
-            let comonents:NSURLComponents = NSURLComponents(string: absoluteString),
+            let comonents:NSURLComponents = NSURLComponents(string: absoluteString!),
             let queryItems = comonents.queryItems else {
             return result
         }
